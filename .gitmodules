@@ -1,0 +1,9 @@
+[submodule "third_party/uart_control"]
+	path = third_party/uart_control
+	url = https://github.com/leolei2012/uart_control.git
+[submodule "third_party/mb_rtu"]
+	path = third_party/mb_rtu
+	url = https://github.com/leolei2012/mb_rtu
+[submodule "third_party/log.c"]
+	path = third_party/log.c
+	url = https://github.com/rxi/log.c.git
