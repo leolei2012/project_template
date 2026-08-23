@@ -1,5 +1,5 @@
 /** Includes ------------------------------------------------------------------ */
-#include "bsp_it.h"
+#include "bsp_isr.h"
 /** Private includes ---------------------------------------------------------- */
 #include "stm32g4xx_hal.h"
 #include "stm32g4xx_ll_adc.h"

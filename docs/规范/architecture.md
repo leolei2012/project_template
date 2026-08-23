@@ -63,6 +63,17 @@ bsp          板级支持包：main、时钟树、引脚、NVIC、启动文件�
 1. **`hal/` 可平铺**：hal 是「按外设实例」的薄封装（`hal_<periph>`），本质是板级文件集而非可复用模块，可把 `hal.h` / `hal.c` 与所有 `hal_*.{h,c}` 直接平铺在 `hal/` 根，不拆模块。
 2. **`bsp/` 保持 `include/ src/ linker/ startup/`**：bsp 与具体 PCB 绑定，不是可复用组件，沿用传统 include/src 布局。
 
+### 2.2 bsp 中断服务文件（bsp_isr）
+
+- 板级中断 / 异常处理统一收敛到 `bsp/src/bsp_isr.c`（公开声明在 `bsp/include/bsp_isr.h`）。
+- 命名用 `bsp_isr`（isr = Interrupt Service Routine），**不用** CubeMX 的 `stm32g4xx_it.c`：与工程 `bsp_` 前缀命名统一，且不把芯片型号焊死在文件名里，契合「换板只改 bsp」。
+- 该文件等价于 CubeMX 生成工程里的 `stm32g4xx_it.c`，职责有三类：
+  1. 内核异常向量（NMI / MemManage / BusFault / UsageFault / SVC / DebugMon / SysTick）；
+  2. 外设中断服务程序（ADC / TIM / USART / DMA …），在 ISR 内转发到 hal / drivers 层回调；
+  3. 故障现场捕获（fault 诊断，属调试工具逻辑）。
+- `xxx_Handler` / `xxx_IRQHandler` 符号由启动文件（`startup_xxx.s`）的向量表引用，**文件名与符号名解耦**，重命名不影响链接。
+- 若 RTOS 已接管某些异常（如 RT-Thread 接管 HardFault / PendSV），相关符号不在此文件重复定义。
+
 ---
 
 ## 3. 依赖规则（无环 DAG）

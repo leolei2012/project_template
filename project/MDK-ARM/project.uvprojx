@@ -396,9 +396,9 @@
               <FilePath>..\..\hal\hal_cordic.c</FilePath>
             </File>
             <File>
-              <FileName>bsp_it.c</FileName>
+              <FileName>bsp_isr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\bsp\src\bsp_it.c</FilePath>
+              <FilePath>..\..\bsp\src\bsp_isr.c</FilePath>
             </File>
             <File>
               <FileName>system_stm32g4xx.c</FileName>
@@ -712,7 +712,6 @@
             </File>
           </Files>
         </Group>
-
         <Group>
           <GroupName>third_party/mb_rtu</GroupName>
           <Files>

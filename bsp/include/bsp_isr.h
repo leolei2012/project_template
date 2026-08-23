@@ -1,5 +1,5 @@
-#ifndef BSP_IT_H
-#define BSP_IT_H
+#ifndef BSP_ISR_H
+#define BSP_ISR_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,4 +25,4 @@ void DMA1_Channel2_IRQHandler(void);
 }
 #endif
 
-#endif /* BSP_IT_H */
+#endif /* BSP_ISR_H */
