@@ -1,6 +1,5 @@
 #include "drv_ain_sensor.h"
 
-#include "drv.h"
 #include "hal.h"
 
 /*

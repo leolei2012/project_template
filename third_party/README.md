@@ -9,14 +9,11 @@
 
 | 目录                | 类型   | 远端仓库                                       | 说明                                     |
 | ------------------- | ------ | ---------------------------------------------- | ---------------------------------------- |
-| `uart_control`    | 子模块 | https://github.com/leolei2012/uart_control.git | 通用 UART 收发模块（芯片无关，ops 注入） |
-| `mb_rtu`          | 子模块 | https://github.com/leolei2012/mb_rtu.git       | Modbus RTU 主 / 从协议栈                 |
-| `log.c`           | 子模块 | https://github.com/rxi/log.c.git               | 轻量日志库                               |
-| `bootloader`      | vendor | —（待提供）                                   | IAP 引导 / OTA 下载引擎                  |
-| `filter`          | vendor | —（待提供）                                   | 滤波（EMA 等）                           |
-| `FlashDB-2.2.0`   | vendor | —（待提供）                                   | 键值数据库                               |
-| `littlefs-2.11.3` | vendor | —（待提供）                                   | 嵌入式文件系统                           |
-| `pid`             | vendor | —（待提供）                                   | PID 控制器                               |
+| `uart_control` | 子模块 | https://github.com/leolei2012/uart_control.git | 通用 UART 收发模块（芯片无关，ops 注入） |
+| `mb_rtu`       | 子模块 | https://github.com/leolei2012/mb_rtu.git       | Modbus RTU 主 / 从协议栈                 |
+| `bootloader`   | vendor | —（待提供）                                   | IAP 引导 / OTA 下载引擎                  |
+| `filter`       | vendor | —（待提供）                                   | 滤波（EMA 等）                           |
+| `pid`          | vendor | —（待提供）                                   | PID 控制器                               |
 
 ## 子模块使用
 
@@ -35,4 +32,4 @@ git submodule update --remote third_party/uart_control
 
 ## 待办
 
-- `bootloader` / `filter` / `FlashDB-2.2.0` / `littlefs-2.11.3` / `pid` 尚无独立远端仓库，待提供 URL 后迁移为子模块；在此之前保持 vendor。
+- `bootloader` / `filter` / `pid` 尚无独立远端仓库，待提供 URL 后迁移为子模块；在此之前保持 vendor。

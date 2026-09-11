@@ -14,7 +14,6 @@ void app_alarm_system_init(struct app_alarm_system *cb)
 
     rt_memset(cb, 0, sizeof(*cb));
 
-    /// initial al alarm object
     for (i = 0; i < APP_ALARM_SYSTEM_ID_NUM; i++)
     {
         alarm_init(&cb->alarms[i]);
@@ -22,6 +21,9 @@ void app_alarm_system_init(struct app_alarm_system *cb)
     }
 }
 
+/**
+ * @brief 注册告警
+ */
 int8_t app_alarm_system_register(struct app_alarm_system *cb, const struct alarm_config_t *config)
 {
     if (cb == NULL || config == NULL)
@@ -36,10 +38,6 @@ int8_t app_alarm_system_register(struct app_alarm_system *cb, const struct alarm
 
     return alarm_config(&cb->alarms[config->alarm_id], config);
 }
-
-
-
-#if 1
 
 int8_t app_alarm_system_enable_alarm(struct app_alarm_system *cb, uint8_t alarm_id)
 {
@@ -61,6 +59,7 @@ int8_t app_alarm_system_disable_alarm(struct app_alarm_system *cb, uint8_t alarm
     }
 
     alarm_disable(&cb->alarms[alarm_id]);
+
     return 0;
 }
 
@@ -72,6 +71,7 @@ int8_t app_alarm_system_clear_alarm(struct app_alarm_system *cb, uint8_t alarm_i
     }
 
     alarm_clear(&cb->alarms[alarm_id]);
+
     return 0;
 }
 
@@ -99,7 +99,7 @@ enum alarm_status_t app_alarm_system_get_status(const struct app_alarm_system *c
         return ALARM_STATUS_DISABLED;
     }
 
-    return  alarm_get_status(&cb->alarms[alarm_id]);
+    return alarm_get_status(&cb->alarms[alarm_id]);
 }
 
 uint8_t app_alarm_system_has_active_alarms(const struct app_alarm_system *cb)
@@ -139,12 +139,11 @@ uint32_t app_alarm_system_get_trigger_count(const struct app_alarm_system *cb, u
         return 0;
     }
 
-    return 0u;
+    return cb->alarms[alarm_id].trigger_count;
 }
 
 void app_alarm_system_poll(struct app_alarm_system *cb)
 {
-
     uint8_t active_count;
     uint8_t i;
 
@@ -153,17 +152,12 @@ void app_alarm_system_poll(struct app_alarm_system *cb)
         return;
     }
 
-#if 0
-    cb->system_run_count++;
-#endif
-
     active_count = 0;
 
     for (i = 0; i < APP_ALARM_SYSTEM_ID_NUM; i++)
     {
         alarm_run(&cb->alarms[i]);
 
-        /// 统计告警
         if (cb->alarms[i].status == ALARM_STATUS_ACTIVE)
         {
             active_count++;
@@ -171,16 +165,4 @@ void app_alarm_system_poll(struct app_alarm_system *cb)
     }
 
     cb->active_alarm_count = active_count;
-
-#if 0
-    /// 更新总告警次数统计
-    cb->total_alarm_count = 0;
-
-    for (i = 0; i < APP_ALARM_SYSTEM_ID_NUM; i++)
-    {
-        cb->total_alarm_count += cb->alarms[i].trigger_count;
-    }
-#endif
 }
-
-#endif

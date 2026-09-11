@@ -156,17 +156,16 @@ void SysTick_Handler(void)
 /**
   * @brief ADC1/ADC2 共享中断
   *
-  * 注入组 JEOC：TIM1 触发的三相电流采样
+  * 注入组 JEOC：预留（原用于 TIM1 触发的三相电流采样）
   * 规则组 EOC：不再使用（软件触发 + poll 阻塞读取）
   */
 void ADC1_2_IRQHandler(void)
 {
-    /** —— ADC1 注入序列转换完成（三相电流采样）—— */
+    /** —— ADC1 注入序列转换完成（预留，当前仅清标志）—— */
     if (LL_ADC_IsActiveFlag_JEOS(ADC1) != 0U)
     {
         g_adc_isr_count++;
         LL_ADC_ClearFlag_JEOS(ADC1);
-        drv_curr_fdbk_adc_isr(g_drv.curr_fdbk);
     }
     else
     {
@@ -184,20 +183,15 @@ void ADC1_2_IRQHandler(void)
 /**
   * @brief TIM1 UP / TIM16 共享中断
   *
-  * TIM1 更新中断（每个 PWM 周期，中心对齐下溢 + 上溢）：
-  *   重配置 ADC1/ADC2 JSQR 为当前扇区对应的单通道注入序列，
-  *   然后使能 TIM1_TRGO=OC4REF 触发下一轮 ADC 注入转换。
+  * TIM1 更新中断（预留，原用于每 PWM 周期重配置 ADC 注入序列）
   */
 void TIM1_UP_TIM16_IRQHandler(void)
 {
-#if DRV_CURR_FDBK_TOPOLOGY == DRV_CURR_FDBK_3SHUNT
     if (LL_TIM_IsActiveFlag_UPDATE(TIM1) != 0U)
     {
         g_tim1_up_isr_count++;
         LL_TIM_ClearFlag_UPDATE(TIM1);
-        drv_curr_fdbk_tim1_up_isr(g_drv.curr_fdbk);
     }
-#endif
 }
 
 /**

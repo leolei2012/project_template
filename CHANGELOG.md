@@ -9,6 +9,12 @@
 
 ## [Unreleased]
 
+### Removed
+- **清理已删除模块的残留引用**：移除 app 层已删除业务模块（core/hmi/water_pump/compressor/fan/memory）与 drivers 层 curr_fdbk/buzz/memory 的引用，工程恢复自洽
+- **app 层收敛为单一示例模块**：仅保留 alarm_system，告警 ID 由产品化枚举改为通用示例
+- **构建配置同步**：清理 `project.uvprojx` 与 `.vscode/c_cpp_properties.json` 的过期 IncludePath / 源文件，并把 `utils/alarm` 补进 Keil 源文件列表
+- **文档同步**：AGENTS.md 架构树更新为现状，新增根目录 README.md，清理 third_party 库清单
+
 ### Changed
 - **工程定位改为开发板模板**：`AGENTS.md` / `CLAUDE.md` 标题由"数字电源控制器固件项目"改为"STM32G474VET6 开发板模板工程"；`docs/template_README.md` 新增"当前平台"章节（STM32G474VET6 + Keil MDK-ARM）
 

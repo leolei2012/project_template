@@ -341,7 +341,7 @@
               <MiscControls></MiscControls>
               <Define>USE_FULL_LL_DRIVER,USE_HAL_DRIVER,STM32G474xx</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\bsp\include;..\..\hal;..\..\middleware;..\..\middleware\debug_monitor\include;..\..\third_party\filter\include;..\..\third_party\mb_rtu\include;..\..\third_party\pid\include;..\..\third_party\uart_control\include;..\..\third_party\bootloader\include;..\..\third_party\bootloader\port\stm32g4;..\..\drivers;..\..\drivers\ain_sensor\include;..\..\drivers\buzz\include;..\..\drivers\curr_fdbk\include;..\..\drivers\memory\include;..\..\app;..\..\app\alarm_system\include;..\..\app\compressor\include;..\..\app\core\include;..\..\app\fan\include;..\..\app\hmi\include;..\..\app\main\include;..\..\app\memory\include;..\..\app\water_pump\include;..\..\config;..\..\rtos\rt-thread\include;..\..\rtos\rt-thread\bsp;..\..\rtos\rt-thread\libcpu\arm\cortex-m4;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Inc;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Inc\Legacy;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\CMSIS\Include;..\..\utils\alarm\include;..\..\utils\check_algorithm\include;..\..\utils\debug\include;..\..\utils\ntc_temp\include;..\..\utils\platform\include;..\..\utils\rcm\include;..\..\utils\ring_buffer\include</IncludePath>
+              <IncludePath>..\..\bsp\include;..\..\hal;..\..\middleware;..\..\middleware\debug_monitor\include;..\..\third_party\filter\include;..\..\third_party\mb_rtu\include;..\..\third_party\pid\include;..\..\third_party\uart_control\include;..\..\third_party\bootloader\include;..\..\third_party\bootloader\port\stm32g4;..\..\drivers;..\..\drivers\ain_sensor\include;..\..\app;..\..\app\alarm_system\include;..\..\config;..\..\rtos\rt-thread\include;..\..\rtos\rt-thread\bsp;..\..\rtos\rt-thread\libcpu\arm\cortex-m4;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Inc;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Inc\Legacy;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\CMSIS\Include;..\..\utils\alarm\include;..\..\utils\check_algorithm\include;..\..\utils\debug\include;..\..\utils\ntc_temp\include;..\..\utils\platform\include;..\..\utils\rcm\include;..\..\utils\ring_buffer\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -471,6 +471,11 @@
               <FilePath>..\..\utils\platform\src\platform.c</FilePath>
             </File>
             <File>
+              <FileName>alarm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\utils\alarm\src\alarm.c</FilePath>
+            </File>
+            <File>
               <FileName>filter.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\third_party\filter\src\filter.c</FilePath>
@@ -494,11 +499,6 @@
               <FileName>drv_ain_sensor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\drivers\ain_sensor\src\drv_ain_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>drv_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\drivers\curr_fdbk\src\drv_curr_fdbk.c</FilePath>
             </File>
           </Files>
         </Group>
