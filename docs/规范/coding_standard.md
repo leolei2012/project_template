@@ -16,16 +16,16 @@
 
 ### 1.2 类型
 
-- **对象 / 结构体类型不带 `_t` 后缀**：`debug_monitor`、`dm_adapter`、`drv_motor`。
-- 用 `typedef struct { ... } 名称;`（匿名结构体 typedef），不带 struct tag。
+- **对象 / 结构体类型用带 tag 的 `struct`，不 typedef**：`struct debug_monitor`、`struct dm_adapter`、`struct drv_motor`，使用处写 `struct 名称`。
+- 定义：`struct 名称 { ... };`（struct tag 保留，便于前向声明、自引用与不透明指针）。
 - 第三方类型（`mb_slave_handle`、`struct uart_control`、`mb_err_t`）保持原样不改。
 
 ```c
-typedef struct
+struct dm_adapter
 {
     void (*init)(struct mb_slave_handle *slave);
     void (*poll)(void);
-} dm_adapter;                          /* ✓ 无 _t */
+};
 ```
 
 ### 1.3 函数
@@ -186,7 +186,7 @@ void debug_monitor_init(debug_monitor *self, uint8_t slave_addr, struct uart_con
  * @param slave_addr Modbus 从站地址（如 0x01）
  * @param uart       uart_control 实例（由上层注入）
  */
-void debug_monitor_init(debug_monitor *self, uint8_t slave_addr, struct uart_control *uart);
+void debug_monitor_init(struct debug_monitor *self, uint8_t slave_addr, struct uart_control *uart);
 ```
 
 - 简单内部函数可用一行 `/** ... */`。

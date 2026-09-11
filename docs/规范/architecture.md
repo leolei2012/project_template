@@ -31,8 +31,22 @@ drivers      驱动层：具体设备驱动（sensor / motor / lcd / eeprom …�
   ↓
 hal          HAL 抽象层：外设实例薄封装（uart / spi / i2c / adc / tim …）
   ↓
-bsp          板级支持包：main、时钟树、引脚、NVIC、启动文件、链接脚本
+mcal         厂商 SDK（寄存器级）
 ```
+
+`bsp`（板级支持包：main、时钟树、引脚、NVIC、启动文件、链接脚本）是**横向层**，
+不在上面的垂直链里，依赖方向为：
+
+```text
+bsp → mcal     bsp 直接操作寄存器做时钟 / NVIC / 看门狗，并提供板级配置（引脚宏）
+```
+
+`drivers → bsp`、`hal → bsp` 允许：读 bsp 的板级配置（引脚 / 有效电平等），实际 GPIO 操作走 hal。
+禁止：`drivers → mcal`（drivers 访问硬件寄存器必须经 hal）。
+
+职责划分（以 GPIO 为例）：
+- `hal` 只做外设薄封装：引脚模式配置用 bsp 的引脚宏（单一来源），hal 不做设备逻辑。
+- `drivers` 体现设备语义：知道「设备 → 引脚」映射（来自 bsp）与有效电平，只做电平/数据控制，不再配引脚模式。
 
 独立于这条链之外的两类：
 
@@ -148,7 +162,7 @@ RT-Thread 的自动分级示例：
 
 ## 6. 命名约定
 
-- **对象类型不带 `_t`**：`<对象>_t` → `<对象>`（第三方类型保持原样）。
+- **对象 / 结构体类型用带 tag 的 `struct`，不 typedef、不带 `_t`**：`struct drv_output`、`struct drv`（第三方类型保持原样）。
 - **组合根**：`<层>.c` + `<层>_init()`。
 - **线程**：`<层>_task.c` + `<层>_task_init()`（建线程）/ `<层>_task_entry()`（线程体）。
 - **模块文件**：头文件与实现同名（`<模块>.h` ↔ `<模块>.c`），模块内尽量加模块前缀避免裸名冲突。
@@ -202,12 +216,63 @@ C 回调是裸函数指针，无法天然拿到「自己是哪个对象」。两
 ## 10. 新增一个模块的 checklist
 
 1. 建 `<层>/<模块>/{include,src}`。
-2. 写 `<模块>.h`（公开接口）与 `<模块>.c`（实现），对象类型不带 `_t`。
+2. 写 `<模块>.h`（公开接口）与 `<模块>.c`（实现），对象类型用带 tag 的 `struct`（不 typedef、不带 `_t`）。
 3. 依赖一律走 `init(self, 依赖…)`，模块内部不 include 对方实现。
 4. 把 `<模块>/include` 加进构建系统的 IncludePath。
 5. 把 `<模块>/src/*.c` 加进构建系统的源文件列表。
 6. 在对应层的 `<层>.c` 组合根里实例化 + 注入，并按 §5 注册到初始化链（裸机在 main 调用 / RTOS 用 auto-init）。
 7. 需要线程时，写 `<层>_task.c`，`<层>_task_init` 建线程。
+
+---
+
+## 11. 面向对象设计
+
+C 没有语言级 OOP，用「**struct + 自由函数**」模拟对象。约定：
+
+1. **对象 = 带 tag 的 struct**：`struct <模块> { ... };`（不 typedef、不带 `_t`），对象只保存**运行时状态**。
+2. **方法 = 自由函数 + `self`**：`void <模块>_<动作>(struct <模块> *self, ...)`，`self` 恒为第一个参数；公开方法放 `.h`，实现放 `.c`，内部辅助函数 `static`。
+3. **实例归组合根持有**：`static struct <模块> s_<模块>;` 放在 `<层>.c`（组合根，见 §4），模块不自持实例。
+4. **状态在对象里、配置在模块里**：
+   - 运行时状态 → 对象成员（`self->xxx`），不用全局 / 文件静态变量。
+   - 与板子 / 设备相关的**静态配置**（输出通道表、引脚映射等）→ 模块 `.c` 里的 `static const`，组合根不掺和（组合根零逻辑）。
+5. **构造注入**：`<模块>_init(struct <模块> *self, 依赖...)` 初始化对象（`memset` + 填状态 + 硬件配置），依赖走 `init` 参数注入。
+6. **入参校验**：公开方法对 `self` 做 NULL 检查；越界 / 非法参数静默返回（后续可接断言）。
+
+示例（`drv_output`）：
+
+```c
+/* drivers/output/include/drv_output.h */
+struct drv_output
+{
+    bool state[DRV_OUTPUT_COUNT];      /* 运行时状态 */
+};
+
+void drv_output_init(struct drv_output *self);
+void drv_output_set(struct drv_output *self, drv_output_id_t id, bool on);
+
+/* drivers/output/src/drv_output.c */
+static const struct drv_output_channel s_channel[DRV_OUTPUT_COUNT] = { /* 静态配置 */ };
+
+void drv_output_set(struct drv_output *self, drv_output_id_t id, bool on)
+{
+    if (self == NULL || (uint16_t)id >= (uint16_t)DRV_OUTPUT_COUNT)
+    {
+        return;
+    }
+    self->state[id] = on;
+    /* ... */
+}
+
+/* drivers/drv.c —— 组合根：实例化 + 注入，零逻辑 */
+static struct drv_output s_output;
+
+int drv_init(void)
+{
+    drv_output_init(&s_output);
+    g_drv.output = &s_output;
+    return 0;
+}
+```
 
 ---
 
