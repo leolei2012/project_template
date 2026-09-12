@@ -10,7 +10,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
-#include <rtthread.h>
 
 enum on_off_t
 {

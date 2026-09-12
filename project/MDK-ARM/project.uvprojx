@@ -341,7 +341,7 @@
               <MiscControls></MiscControls>
               <Define>USE_FULL_LL_DRIVER,USE_HAL_DRIVER,STM32G474xx</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\bsp\include;..\..\hal;..\..\middleware;..\..\middleware\debug_monitor\include;..\..\third_party\filter\include;..\..\third_party\mb_rtu\include;..\..\third_party\pid\include;..\..\third_party\uart_control\include;..\..\third_party\bootloader\include;..\..\third_party\bootloader\port\stm32g4;..\..\drivers;..\..\drivers\ain_sensor\include;..\..\app;..\..\app\alarm_system\include;..\..\config;..\..\rtos\rt-thread\include;..\..\rtos\rt-thread\bsp;..\..\rtos\rt-thread\libcpu\arm\cortex-m4;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Inc;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Inc\Legacy;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\CMSIS\Include;..\..\utils\alarm\include;..\..\utils\check_algorithm\include;..\..\utils\debug\include;..\..\utils\ntc_temp\include;..\..\utils\platform\include;..\..\utils\rcm\include;..\..\utils\ring_buffer\include</IncludePath>
+              <IncludePath>..\..\bsp\include;..\..\hal;..\..\third_party\filter\include;..\..\third_party\pid\include;..\..\drivers;..\..\drivers\ain_sensor\include;..\..\app;..\..\app\alarm_system\include;..\..\config;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Inc;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Inc\Legacy;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include;..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\CMSIS\Include;..\..\utils\alarm\include;..\..\utils\check_algorithm\include;..\..\utils\debug\include;..\..\utils\ntc_temp\include;..\..\utils\platform\include;..\..\utils\rcm\include;..\..\utils\ring_buffer\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -391,11 +391,6 @@
               <FilePath>..\..\bsp\src\bsp_board.c</FilePath>
             </File>
             <File>
-              <FileName>hal_cordic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\hal_cordic.c</FilePath>
-            </File>
-            <File>
               <FileName>system_stm32g4xx.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\bsp\src\system_stm32g4xx.c</FilePath>
@@ -431,29 +426,9 @@
               <FilePath>..\..\hal\hal_adc1.c</FilePath>
             </File>
             <File>
-              <FileName>hal_adc2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\hal_adc2.c</FilePath>
-            </File>
-            <File>
               <FileName>hal_gpio.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\hal\hal_gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>hal_tim1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\hal_tim1.c</FilePath>
-            </File>
-            <File>
-              <FileName>hal_usart2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\hal_usart2.c</FilePath>
-            </File>
-            <File>
-              <FileName>hal_tim7.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\hal\hal_tim7.c</FilePath>
             </File>
             <File>
               <FileName>hal_tim6.c</FileName>
@@ -503,26 +478,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>middleware</GroupName>
-          <Files>
-            <File>
-              <FileName>middleware.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\middleware\middleware.c</FilePath>
-            </File>
-            <File>
-              <FileName>debug_monitor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\middleware\debug_monitor\src\debug_monitor.c</FilePath>
-            </File>
-            <File>
-              <FileName>dm_adapter.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\middleware\debug_monitor\src\dm_adapter.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>mcal/STM32G4xx_HAL_Driver</GroupName>
           <Files>
             <File>
@@ -551,21 +506,6 @@
               <FilePath>..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Src\stm32g4xx_ll_adc.c</FilePath>
             </File>
             <File>
-              <FileName>stm32g4xx_ll_cordic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Src\stm32g4xx_ll_cordic.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32g4xx_ll_dma.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Src\stm32g4xx_ll_dma.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32g4xx_ll_exti.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Src\stm32g4xx_ll_exti.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32g4xx_ll_gpio.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Src\stm32g4xx_ll_gpio.c</FilePath>
@@ -586,149 +526,9 @@
               <FilePath>..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Src\stm32g4xx_ll_tim.c</FilePath>
             </File>
             <File>
-              <FileName>stm32g4xx_ll_usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Src\stm32g4xx_ll_usart.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32g4xx_ll_utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\mcal\STM32Cube_FW_G4_V1.6.0\Drivers\STM32G4xx_HAL_Driver\Src\stm32g4xx_ll_utils.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>rtos/RT-Thread</GroupName>
-          <Files>
-            <File>
-              <FileName>board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\bsp\board.c</FilePath>
-            </File>
-            <File>
-              <FileName>clock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\clock.c</FilePath>
-            </File>
-            <File>
-              <FileName>components.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\components.c</FilePath>
-            </File>
-            <File>
-              <FileName>cpu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\cpu.c</FilePath>
-            </File>
-            <File>
-              <FileName>device.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\device.c</FilePath>
-            </File>
-            <File>
-              <FileName>idle.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\idle.c</FilePath>
-            </File>
-            <File>
-              <FileName>ipc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\ipc.c</FilePath>
-            </File>
-            <File>
-              <FileName>irq.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\irq.c</FilePath>
-            </File>
-            <File>
-              <FileName>kservice.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\kservice.c</FilePath>
-            </File>
-            <File>
-              <FileName>mem.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\mem.c</FilePath>
-            </File>
-            <File>
-              <FileName>memheap.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\memheap.c</FilePath>
-            </File>
-            <File>
-              <FileName>mempool.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\mempool.c</FilePath>
-            </File>
-            <File>
-              <FileName>object.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\object.c</FilePath>
-            </File>
-            <File>
-              <FileName>scheduler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\scheduler.c</FilePath>
-            </File>
-            <File>
-              <FileName>signal.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\signal.c</FilePath>
-            </File>
-            <File>
-              <FileName>slab.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\slab.c</FilePath>
-            </File>
-            <File>
-              <FileName>thread.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\thread.c</FilePath>
-            </File>
-            <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\src\timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>cpuport.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\rtos\rt-thread\libcpu\arm\cortex-m4\cpuport.c</FilePath>
-            </File>
-            <File>
-              <FileName>context_rvds.S</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\rtos\rt-thread\libcpu\arm\cortex-m4\context_rvds.S</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>third_party/uart_control</GroupName>
-          <Files>
-            <File>
-              <FileName>uart_control.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\third_party\uart_control\src\uart_control.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>third_party/mb_rtu</GroupName>
-          <Files>
-            <File>
-              <FileName>modbus_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\third_party\mb_rtu\src\modbus_common.c</FilePath>
-            </File>
-            <File>
-              <FileName>modbus_slave.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\third_party\mb_rtu\src\modbus_slave.c</FilePath>
-            </File>
-            <File>
-              <FileName>modbus_master.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\third_party\mb_rtu\src\modbus_master.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -739,36 +539,6 @@
               <FileName>pid_float.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\third_party\pid\src\pid_float.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>third_party/bootloader</GroupName>
-          <Files>
-            <File>
-              <FileName>bl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\third_party\bootloader\src\bl.c</FilePath>
-            </File>
-            <File>
-              <FileName>bl_crc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\third_party\bootloader\src\bl_crc.c</FilePath>
-            </File>
-            <File>
-              <FileName>bl_meta.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\third_party\bootloader\src\bl_meta.c</FilePath>
-            </File>
-            <File>
-              <FileName>bl_download.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\third_party\bootloader\src\bl_download.c</FilePath>
-            </File>
-            <File>
-              <FileName>bl_port_stm32g4.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\third_party\bootloader\port\stm32g4\bl_port_stm32g4.c</FilePath>
             </File>
           </Files>
         </Group>

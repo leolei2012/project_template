@@ -56,20 +56,7 @@ void bsp_board_early_init(void)
 
 void bsp_board_nvic_init(void)
 {
-    NVIC_SetPriority(USART2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 3, 1));
-    NVIC_EnableIRQ(USART2_IRQn);
-    NVIC_SetPriority(DMA1_Channel1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 3, 0));
-    NVIC_EnableIRQ(DMA1_Channel1_IRQn);
-    NVIC_SetPriority(DMA1_Channel2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 3, 0));
-    NVIC_EnableIRQ(DMA1_Channel2_IRQn);
-    NVIC_SetPriority(TIM1_BRK_TIM15_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 4, 1));
-    NVIC_EnableIRQ(TIM1_BRK_TIM15_IRQn);
-    NVIC_SetPriority(TIM1_UP_TIM16_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
-    NVIC_EnableIRQ(TIM1_UP_TIM16_IRQn);
-    NVIC_SetPriority(ADC1_2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 2, 0));
-    NVIC_EnableIRQ(ADC1_2_IRQn);
+    /** TIM6：模拟量采样节拍（1kHz） */
     NVIC_SetPriority(TIM6_DAC_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 3, 0));
     NVIC_EnableIRQ(TIM6_DAC_IRQn);
-    NVIC_SetPriority(TIM7_DAC_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 3, 1));
-    NVIC_EnableIRQ(TIM7_DAC_IRQn);
 }

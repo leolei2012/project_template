@@ -10,6 +10,10 @@
 ## [Unreleased]
 
 ### Removed
+- **移除 RT-Thread，模板转裸机**：删除 `rtos/rt-thread/`，`rtos/` 改为占位目录；`main()` 手动初始化各层 + 主循环轮询，去掉所有 `INIT_*_EXPORT` 与线程
+- **移除 git 子模块与 bootloader / middleware**：删除 `uart_control`、`mb_rtu` 子模块、`.gitmodules`、`bootloader` 与 `middleware`（debug_monitor）
+- **精简 HAL 层**：移除 usart2 / tim7 / tim1 / adc2 / cordic 等电机/串口外设封装，保留 gpio / adc1 / tim6
+- **platform.h 去 RTOS 依赖**：不再 include `<rtthread.h>`；同步 `project.uvprojx` 与 `.vscode` 配置
 - **清理已删除模块的残留引用**：移除 app 层已删除业务模块（core/hmi/water_pump/compressor/fan/memory）与 drivers 层 curr_fdbk/buzz/memory 的引用，工程恢复自洽
 - **app 层收敛为单一示例模块**：仅保留 alarm_system，告警 ID 由产品化枚举改为通用示例
 - **构建配置同步**：清理 `project.uvprojx` 与 `.vscode/c_cpp_properties.json` 的过期 IncludePath / 源文件，并把 `utils/alarm` 补进 Keil 源文件列表

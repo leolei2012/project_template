@@ -5,8 +5,6 @@
 
 #include "app_alarm_system.h"
 
-#define APP_ALARM_SYSTEM_TASK_STACK_SIZE 512u
-
 extern struct app g_app;
 
 struct app

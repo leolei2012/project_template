@@ -3,18 +3,12 @@
 
 
 #include <stdbool.h>
-
-#include <rtthread.h>
+#include <stdint.h>
 
 #include "hal_adc1.h"
-#include "hal_adc2.h"
 #include "bsp_board.h"
-#include "hal_cordic.h"
 #include "hal_gpio.h"
-#include "hal_tim1.h"
 #include "hal_tim6.h"
-#include "hal_tim7.h"
-#include "hal_usart2.h"
 
 struct hal
 {

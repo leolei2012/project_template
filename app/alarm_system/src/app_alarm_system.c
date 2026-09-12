@@ -12,7 +12,7 @@ void app_alarm_system_init(struct app_alarm_system *cb)
         return;
     }
 
-    rt_memset(cb, 0, sizeof(*cb));
+    memset(cb, 0, sizeof(*cb));
 
     for (i = 0; i < APP_ALARM_SYSTEM_ID_NUM; i++)
     {
