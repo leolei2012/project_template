@@ -67,13 +67,13 @@ struct drv_ain_sensor
 /** ============================================================
    API
    ============================================================ */
-void drv_ain_sensor_init(struct drv_ain_sensor *cb);
+void drv_ain_sensor_init(struct drv_ain_sensor *self);
 
 /*
  * TIM6 ISR (1kHz) 调用：软件触发 ADC → 阻塞等 EOC → EMA 滤波
  * 采样节拍由硬件定时器保证，不受 RTOS 调度 jitter 影响。
  */
-void drv_ain_sensor_tim_isr(struct drv_ain_sensor *cb);
+void drv_ain_sensor_tim_isr(struct drv_ain_sensor *self);
 
 /*
  * 仿 ST VBS_GetAvBusVoltage_V：u16Volt → 实际电压
@@ -88,6 +88,6 @@ uint32_t bus_voltage_get_voltage_mv(uint16_t raw_d);
  * 100ms 任务调用：将 filtered_adc 转换为物理量 (mV, °C, %RH)
  * 不做 ADC 操作，只做数值转换。
  */
-void drv_ain_sensor_poll(struct drv_ain_sensor *cb);
+void drv_ain_sensor_poll(struct drv_ain_sensor *self);
 
 #endif /* DRV_AIN_SENSOR_H */

@@ -76,64 +76,64 @@ struct alarm_config_t
 
 /**
  * @brief 初始化告警对象
- * @param cb 告警对象指针
+ * @param self 告警对象指针
  */
-void alarm_init(struct alarm *cb);
+void alarm_init(struct alarm *self);
 
 /**
  * @brief 配置告警参数
- * @param cb 告警对象指针
+ * @param self 告警对象指针
  * @param config 告警配置参数
  * @return 0=成功, -1=失败
  */
-int8_t alarm_config(struct alarm *cb, const struct alarm_config_t *config);
+int8_t alarm_config(struct alarm *self, const struct alarm_config_t *config);
 
 /**
  * @brief 运行告警检测
- * @param cb 告警对象指针
+ * @param self 告警对象指针
  * @note 需要周期性调用此函数进行告警检测
  */
-void alarm_run(struct alarm *cb);
+void alarm_run(struct alarm *self);
 
 /**
  * @brief 使能告警
- * @param cb 告警对象指针
+ * @param self 告警对象指针
  */
-void alarm_enable(struct alarm *cb);
+void alarm_enable(struct alarm *self);
 
 /**
  * @brief 禁用告警
- * @param cb 告警对象指针
+ * @param self 告警对象指针
  */
-void alarm_disable(struct alarm *cb);
+void alarm_disable(struct alarm *self);
 
 /**
  * @brief 清除告警状态
- * @param cb 告警对象指针
+ * @param self 告警对象指针
  */
-void alarm_clear(struct alarm *cb);
+void alarm_clear(struct alarm *self);
 
 /**
  * @brief 获取告警状态
- * @param cb 告警对象指针
+ * @param self 告警对象指针
  * @return 告警状态
  */
-enum alarm_status_t alarm_get_status(const struct alarm *cb);
+enum alarm_status_t alarm_get_status(const struct alarm *self);
 
 /**
  * @brief 判断告警条件是否满足
- * @param cb 告警对象指针
+ * @param self 告警对象指针
  * @param current_value 当前监控值
  * @return 1=满足, 0=不满足
  */
-static uint8_t alarm_check_condition(const struct alarm *cb, uint16_t current_value);
+static uint8_t alarm_check_condition(const struct alarm *self, uint16_t current_value);
 
 /**
  * @brief 判断恢复条件是否满足
- * @param cb 告警对象指针
+ * @param self 告警对象指针
  * @param current_value 当前监控值
  * @return 1=满足, 0=不满足
  */
-static uint8_t alarm_check_recovery(const struct alarm *cb, uint16_t current_value);
+static uint8_t alarm_check_recovery(const struct alarm *self, uint16_t current_value);
 
 #endif // ALARM_H

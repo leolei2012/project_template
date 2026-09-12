@@ -15,13 +15,13 @@ struct ring_buffer
     uint8_t count;    /// 当前数据量
 };
 
-void ring_buffer_init(struct ring_buffer *cb, uint8_t *buffer, uint8_t capacity);
-void ring_buffer_clear(struct ring_buffer *cb);
-uint16_t ring_buffer_readable(struct ring_buffer *cb);
-uint16_t ring_buffer_writable(struct ring_buffer *cb);
-uint8_t ring_buffer_is_empty(struct ring_buffer *cb);
-uint8_t ring_buffer_is_full(struct ring_buffer *cb);
-uint8_t ring_buffer_put(struct ring_buffer *cb, uint8_t byte);
-uint8_t ring_buffer_get(struct ring_buffer *cb, uint8_t *byte);
+void ring_buffer_init(struct ring_buffer *self, uint8_t *buffer, uint8_t capacity);
+void ring_buffer_clear(struct ring_buffer *self);
+uint16_t ring_buffer_readable(struct ring_buffer *self);
+uint16_t ring_buffer_writable(struct ring_buffer *self);
+uint8_t ring_buffer_is_empty(struct ring_buffer *self);
+uint8_t ring_buffer_is_full(struct ring_buffer *self);
+uint8_t ring_buffer_put(struct ring_buffer *self, uint8_t byte);
+uint8_t ring_buffer_get(struct ring_buffer *self, uint8_t *byte);
 
 #endif // RING_BUFFER_H

@@ -46,22 +46,22 @@ static void channel_sample(struct drv_ain_sensor_channel *ch)
 /** ============================================================
    初始化
    ============================================================ */
-void drv_ain_sensor_init(struct drv_ain_sensor *cb)
+void drv_ain_sensor_init(struct drv_ain_sensor *self)
 {
-    if (cb == NULL)
+    if (self == NULL)
     {
         return;
     }
 
-    memset(cb, 0, sizeof(*cb));
+    memset(self, 0, sizeof(*self));
 
-    channel_init(&cb->bus_voltage.ch,
+    channel_init(&self->bus_voltage.ch,
                  DRV_AIN_BUS_VOLTAGE_ADC_CHANNEL,
                  DRV_AIN_BUS_VOLTAGE_SAMPLE_TIME,
                  DRV_AIN_BUS_VOLTAGE_EMA_SHIFT);
 
     /* 触发首拍转换, 供第一个 TIM6 ISR 读取 */
-    hal_adc1_reg_trigger_channel(cb->bus_voltage.ch.adc_channel);
+    hal_adc1_reg_trigger_channel(self->bus_voltage.ch.adc_channel);
 
     hal_tim6_start();
 }
@@ -69,14 +69,14 @@ void drv_ain_sensor_init(struct drv_ain_sensor *cb)
 /** ============================================================
    TIM6 ISR (1kHz): 逐个通道触发 ADC + EMA 滤波
    ============================================================ */
-void drv_ain_sensor_tim_isr(struct drv_ain_sensor *cb)
+void drv_ain_sensor_tim_isr(struct drv_ain_sensor *self)
 {
-    if (cb == NULL)
+    if (self == NULL)
     {
         return;
     }
 
-    channel_sample(&cb->bus_voltage.ch);
+    channel_sample(&self->bus_voltage.ch);
 }
 
 
@@ -84,15 +84,15 @@ void drv_ain_sensor_tim_isr(struct drv_ain_sensor *cb)
 /** ============================================================
    100ms 轮询: filtered_adc → 物理量
    ============================================================ */
-void drv_ain_sensor_poll(struct drv_ain_sensor *cb)
+void drv_ain_sensor_poll(struct drv_ain_sensor *self)
 {
-    if (cb == NULL)
+    if (self == NULL)
     {
         return;
     }
 
-    cb->bus_voltage.voltage_mv   = bus_voltage_get_voltage_mv(cb->bus_voltage.ch.filtered_adc);
-    cb->bus_voltage.voltage_raw_d = cb->bus_voltage.ch.filtered_adc;
+    self->bus_voltage.voltage_mv   = bus_voltage_get_voltage_mv(self->bus_voltage.ch.filtered_adc);
+    self->bus_voltage.voltage_raw_d = self->bus_voltage.ch.filtered_adc;
 }
 
 /** ============================================================
