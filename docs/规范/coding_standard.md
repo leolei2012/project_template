@@ -11,43 +11,43 @@
 ### 1.1 文件
 
 - 头文件与实现同名：`<模块>.h` ↔ `<模块>.c`。
-- 全小写 + 下划线：`debug_monitor.c`、`drv_ain_sensor.c`、`ring_buffer.c`。
+- 全小写 + 下划线：`app_alarm_system.c`、`drv_ain_sensor.c`、`ring_buffer.c`。
 - 一个模块 = 一对 .h/.c（公开接口在 .h，实现在 .c）。
 
 ### 1.2 类型
 
-- **对象 / 结构体类型用带 tag 的 `struct`，不 typedef**：`struct debug_monitor`、`struct dm_adapter`、`struct drv_motor`，使用处写 `struct 名称`。
+- **对象 / 结构体类型用带 tag 的 `struct`，不 typedef**：`struct app_alarm_system`、`struct drv_ain_sensor`、`struct alarm`，使用处写 `struct 名称`。
 - 定义：`struct 名称 { ... };`（struct tag 保留，便于前向声明、自引用与不透明指针）。
-- 第三方类型（`mb_slave_handle`、`struct uart_control`、`mb_err_t`）保持原样不改。
+- 第三方类型（`pid_float_t`、`struct ema_filter_t`、`median_filter_t`）保持原样不改。
 
 ```c
-struct dm_adapter
+struct app_alarm_system
 {
-    void (*init)(struct mb_slave_handle *slave);
-    void (*poll)(void);
+    struct alarm alarms[APP_ALARM_SYSTEM_ID_NUM]; /**< 告警对象数组 */
+    uint8_t active_alarm_count;                   /**< 当前活动的告警数量 */
 };
 ```
 
 ### 1.3 函数
 
-- 全小写 + 下划线，`模块_动作` 格式：`debug_monitor_init`、`dm_adapter_refresh`、`hal_gpio_write`。
+- 全小写 + 下划线，`模块_动作` 格式：`app_alarm_system_init`、`drv_ain_sensor_poll`、`hal_gpio_write`。
 - 组合根：`<层>_init`；线程：`<层>_task_init` / `<层>_task_entry`。
 
 ### 1.4 变量
 
 | 作用域 | 前缀 | 示例 |
 |---|---|---|
-| 文件内静态变量 | `s_` | `s_self`、`s_adapter`、`s_regs` |
-| 全局变量 | `g_` | `g_drv`、`g_version`、`g_middleware` |
+| 文件内静态变量 | `s_` | `s_self`、`s_ain_sensor`、`s_gpio_desc` |
+| 全局变量 | `g_` | `g_drv`、`g_version`、`g_app` |
 | 局部变量 | 无前缀 | `len`、`buf`、`val` |
 
 - 实例归组合根持有：`static <模块> s_<模块>;`（模块内部不自己 new 实例）。
-- **对象指针一律用 `self`**：函数操作的实例 / 句柄指针参数统一命名为 `self`（如 `debug_monitor *self`、`struct uart_control *self`、`struct mb_slave_handle *self`），不用 `hdl` / `uart` / `this` 等。
+- **对象指针一律用 `self`**：函数操作的实例 / 句柄指针参数统一命名为 `self`（如 `struct app_alarm_system *self`、`struct drv_ain_sensor *self`、`struct alarm *self`），不用 `hdl` / `uart` / `this` 等。
 
 ### 1.5 宏 / 常量
 
-- 宏全大写 + 下划线：`UART_RX_BUF_SIZE`、`HAL_GPIO_LED_RED`。
-- 枚举常量全大写 + 模块前缀：`TEST_REG_MAGIC`、`CTRL_REG_TARGET_SPEED`、`MB_FC_IAP`。
+- 宏全大写 + 下划线：`LED_RED_PIN`、`HAL_GPIO_LED_RED`、`AIN_BUS_VOLTAGE_PIN`。
+- 枚举常量全大写 + 模块前缀：`APP_ALARM_SYSTEM_ID_OVER_TEMPERATURE`、`APP_ALARM_SYSTEM_ID_NUM`、`HAL_GPIO_COUNT`。
 - 禁止魔法数字直接散落代码，用命名常量 / 枚举表达。
 - **每个库暴露版本宏**：`XXX_VERSION_MAJOR` / `_MINOR` / `_PATCH`、`XXX_VERSION_STRING`（字符串）、`XXX_VERSION_NUM`（`major<<16 | minor<<8 | patch`，用于版本比较）。
 
@@ -66,10 +66,14 @@ struct dm_adapter
 - **Allman 括号**：左括号独占一行，控制语句/函数体不省略括号。
 
 ```c
-static void dm_on_tx_done(struct uart_control *uart)
+static const hal_gpio_desc_t *hal_gpio_desc_get(uint16_t id)
 {
-    (void)uart;
-    uart_control_enable_rx(s_uart);
+    if (id >= HAL_GPIO_COUNT)
+    {
+        return NULL;
+    }
+
+    return &s_gpio_desc[id];
 }
 ```
 
@@ -94,10 +98,10 @@ static void dm_on_tx_done(struct uart_control *uart)
 ### 3.1 包含保护
 
 ```c
-#ifndef DM_ADAPTER_H
-#define DM_ADAPTER_H
+#ifndef APP_ALARM_SYSTEM_H
+#define APP_ALARM_SYSTEM_H
 ...
-#endif /* DM_ADAPTER_H */
+#endif /* APP_ALARM_SYSTEM_H */
 ```
 
 ### 3.2 自包含
@@ -122,16 +126,16 @@ static void dm_on_tx_done(struct uart_control *uart)
 ### 4.2 参数与返回
 
 - 依赖走 `init(self, 依赖…)` 构造注入，模块内部不 include 对方实现。
-- 出错返回错误码（`MB_OK` / `MB_ERR_*` 这类枚举），不用裸 `-1`/魔法值。
+- 出错返回错误码（`0`=成功 / `-1`=失败，或自定义 `xxx_OK` / `xxx_ERR_*` 枚举），不用裸 `-1`/魔法值。
 
 ### 4.3 NULL 检查
 
 - 对传入指针做入参校验：
 
 ```c
-void debug_monitor_init(debug_monitor *self, uint8_t slave_addr, struct uart_control *uart)
+void app_alarm_system_init(struct app_alarm_system *self)
 {
-    if (self == NULL || uart == NULL)
+    if (self == NULL)
     {
         return;
     }
@@ -153,7 +157,7 @@ void debug_monitor_init(debug_monitor *self, uint8_t slave_addr, struct uart_con
 
 ### 5.3 const
 
-- 不该被修改的指针/参数加 `const`：`const struct mb_reg_map *`、`const uint8_t *buf`。
+- 不该被修改的指针/参数加 `const`：`const struct app_alarm_system *`、`const uint8_t *buf`。
 
 ### 5.4 类型转换
 
@@ -170,8 +174,8 @@ void debug_monitor_init(debug_monitor *self, uint8_t slave_addr, struct uart_con
 
 ```c
 /**
- * @file    dm_adapter.h
- * @brief   debug_monitor 库的测试适配器
+ * @file    drv_ain_sensor.h
+ * @brief   模拟量传感器驱动（ADC + EMA 滤波）
  */
 ```
 
@@ -181,12 +185,10 @@ void debug_monitor_init(debug_monitor *self, uint8_t slave_addr, struct uart_con
 
 ```c
 /**
- * @brief 初始化调试接口（绑定 uart_control 传输 + dm_adapter 寄存器/适配器）
- * @param self       对象实例
- * @param slave_addr Modbus 从站地址（如 0x01）
- * @param uart       uart_control 实例（由上层注入）
+ * @brief 初始化告警系统
+ * @param self 告警系统对象指针
  */
-void debug_monitor_init(struct debug_monitor *self, uint8_t slave_addr, struct uart_control *uart);
+void app_alarm_system_init(struct app_alarm_system *self);
 ```
 
 - 简单内部函数可用一行 `/** ... */`。
@@ -211,13 +213,12 @@ void debug_monitor_init(struct debug_monitor *self, uint8_t slave_addr, struct u
 - 按地址/枚举分发用 `switch`（比 if-else 链清晰、易扩展），必须带 `default`：
 
 ```c
-switch (addr)
+switch (cb->threshold_type)
 {
-case CTRL_REG_TEST_WORD:
-    s_ctrl_regs[CTRL_REG_TEST_WORD] = val;
-    return MB_OK;
+case GREATER_OR_EQUAL_THAN_THRESHOLD:
+    return (current_value >= cb->threshold_value) ? 1 : 0;
 default:
-    return MB_ERR_ADDR;
+    return 0;
 }
 ```
 
@@ -239,8 +240,8 @@ default:
 
 ### 9.1 初始化
 
-- 变量声明时初始化，别依赖隐式零值：`static uint16_t s_ctrl_regs[2] = { 0x0000u, 0x0000u };`。
-- 结构体用 `memset(&obj, 0, sizeof(obj))` 或指定初始化器 `{ .init = ..., .poll = ... }`。
+- 变量声明时初始化，别依赖隐式零值：`static uint32_t s_xxx = 0u;`。
+- 结构体用 `memset(&obj, 0, sizeof(obj))` 或指定初始化器（如 `s_gpio_desc` 的 `{ [HAL_GPIO_LED_RED] = { .port = ..., .pin = ... } }`）。
 
 ### 9.2 未使用参数
 

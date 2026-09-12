@@ -162,7 +162,7 @@ RT-Thread 的自动分级示例：
 
 ## 6. 命名约定
 
-- **对象 / 结构体类型用带 tag 的 `struct`，不 typedef、不带 `_t`**：`struct drv_output`、`struct drv`（第三方类型保持原样）。
+- **对象 / 结构体类型用带 tag 的 `struct`，不 typedef、不带 `_t`**：`struct app_alarm_system`、`struct drv`（第三方类型保持原样）。
 - **组合根**：`<层>.c` + `<层>_init()`。
 - **线程**：`<层>_task.c` + `<层>_task_init()`（建线程）/ `<层>_task_entry()`（线程体）。
 - **模块文件**：头文件与实现同名（`<模块>.h` ↔ `<模块>.c`），模块内尽量加模块前缀避免裸名冲突。
@@ -173,7 +173,7 @@ RT-Thread 的自动分级示例：
 
 - **裸文件名 include**：第一方代码统一 `#include "<模块>.h"`，不写层/模块前缀。
 - **每个模块的 `include/` 目录进 `-I`**，层的根目录也进 `-I`（用于 `<层>.h`）。
-- 第三方库保留各自前缀（如 `#include "modbus/modbus_slave.h"`）。
+- 第三方库保留各自前缀（如 `#include "filter.h"`、`#include "pid_float.h"`；有子目录的库写 `#include "xxx/yyy.h"`）。
 
 IncludePath 形态（以 Keil MDK 为例）：
 
@@ -238,38 +238,48 @@ C 没有语言级 OOP，用「**struct + 自由函数**」模拟对象。约定�
 5. **构造注入**：`<模块>_init(struct <模块> *self, 依赖...)` 初始化对象（`memset` + 填状态 + 硬件配置），依赖走 `init` 参数注入。
 6. **入参校验**：公开方法对 `self` 做 NULL 检查；越界 / 非法参数静默返回（后续可接断言）。
 
-示例（`drv_output`）：
+示例（`app_alarm_system`）：
 
 ```c
-/* drivers/output/include/drv_output.h */
-struct drv_output
+/* app/alarm_system/include/app_alarm_system.h */
+struct app_alarm_system
 {
-    bool state[DRV_OUTPUT_COUNT];      /* 运行时状态 */
+    struct alarm alarms[APP_ALARM_SYSTEM_ID_NUM]; /**< 运行时状态 */
+    uint8_t active_alarm_count;
 };
 
-void drv_output_init(struct drv_output *self);
-void drv_output_set(struct drv_output *self, drv_output_id_t id, bool on);
+void app_alarm_system_init(struct app_alarm_system *self);
+void app_alarm_system_poll(struct app_alarm_system *self);
 
-/* drivers/output/src/drv_output.c */
-static const struct drv_output_channel s_channel[DRV_OUTPUT_COUNT] = { /* 静态配置 */ };
-
-void drv_output_set(struct drv_output *self, drv_output_id_t id, bool on)
+/* app/alarm_system/src/app_alarm_system.c */
+void app_alarm_system_poll(struct app_alarm_system *self)
 {
-    if (self == NULL || (uint16_t)id >= (uint16_t)DRV_OUTPUT_COUNT)
+    uint8_t active_count = 0;
+    uint8_t i;
+
+    if (self == NULL)
     {
         return;
     }
-    self->state[id] = on;
-    /* ... */
+
+    for (i = 0; i < APP_ALARM_SYSTEM_ID_NUM; i++)
+    {
+        alarm_run(&self->alarms[i]);
+        if (self->alarms[i].status == ALARM_STATUS_ACTIVE)
+        {
+            active_count++;
+        }
+    }
+    self->active_alarm_count = active_count;
 }
 
-/* drivers/drv.c —— 组合根：实例化 + 注入，零逻辑 */
-static struct drv_output s_output;
+/* app/app.c —— 组合根：实例化 + 注入，零逻辑 */
+static struct app_alarm_system s_app_alarm_system;
 
-int drv_init(void)
+int app_init(void)
 {
-    drv_output_init(&s_output);
-    g_drv.output = &s_output;
+    app_alarm_system_init(&s_app_alarm_system);
+    g_app.alarm_system = &s_app_alarm_system;
     return 0;
 }
 ```
