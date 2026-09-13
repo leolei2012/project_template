@@ -41,7 +41,7 @@ docs/        文档与规范
 ### 前置条件
 
 1. **Keil MDK-ARM**（μVision 5）
-2. **mcal（厂商 SDK）**：`mcal/` 被 `.gitignore` 忽略，需手动放置：
+2. **mcal（厂商 SDK）**：`mcal/` 纳入版本控制；如尚未放置，需先放入：
    - STM32Cube_FW_G4_V1.6.0 → `mcal/STM32Cube_FW_G4_V1.6.0/`
    - CubeMX 配置 → `mcal/cubemx/`
 

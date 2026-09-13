@@ -12,8 +12,8 @@
 - **工程文件**: `project/MDK-ARM/project.uvprojx`
 - **MCAL**: STM32Cube_FW_G4_V1.6.0
 
-> **注意**：`mcal/`（厂商 SDK）体积大、被 `.gitignore` 忽略，不在仓库内。
-> 构建前需将 STM32Cube_FW_G4_V1.6.0 放到 `mcal/STM32Cube_FW_G4_V1.6.0/`，
+> **注意**：`mcal/`（厂商 SDK）纳入版本控制；如尚未放置，需先将
+> STM32Cube_FW_G4_V1.6.0 放到 `mcal/STM32Cube_FW_G4_V1.6.0/`，
 > CubeMX 配置放到 `mcal/cubemx/`。
 
 ## RTOS

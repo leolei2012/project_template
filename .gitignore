@@ -1,6 +1,3 @@
-# MCAL (vendor library, too large)
-mcal/
-
 # Build output
 build/
 out/
